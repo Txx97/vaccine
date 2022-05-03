@@ -50,8 +50,8 @@ function AdministerVaccination() {
                     name="vaccination"
                   >
                     <option value="">Select Vaccination</option>
-                    <option value="Covaxin">Covaxin</option>
-                    <option value="CovidSheild">CovidSheild</option>
+                    <option value="First Dose">First Dose</option>
+                    <option value="Second Dose">Second Dose</option>
                   </select>
                 </div>
                 <label className="fw-bold">Date Administrated</label>
