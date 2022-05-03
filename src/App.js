@@ -4,6 +4,7 @@ import Forms from "./components/Forms/Forms";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "./components/Navbar";
 import Homepage from "./components/Hompage";
+import AdministerVaccination from "./components/AdministerVaccination/AdministerVaccination";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Homepage />} />
         <Route path="/forms" element={<Forms />} />
+        <Route path="/administerVaccination" element={<AdministerVaccination />} />
       </Routes>
     </BrowserRouter>
   );
