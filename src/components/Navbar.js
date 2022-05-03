@@ -14,7 +14,7 @@ const Navbar = () => {
             </li>
             <li>
             <Link to="/forms" className="nav-link">
-              Forms
+              Add a Patient
             </Link>
           </li>
           <li className="nav-item">

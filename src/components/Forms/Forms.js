@@ -1,47 +1,37 @@
-import React, { useState } from "react";
-// import './Forms.css'
-// import { Prompt } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
 function Forms(props) {
-  const [validationMessages, setValidationMessages] = useState([]);
   const [formData, setFormData] = useState({});
+  const [isValidated, setIsValidated] = useState(false);
+  const [fieldTouch, setFieldTouch] = useState({});
+
   const handleChange = ({ target }) => {
     setFormData({ ...formData, [target.name]: target.value });
-    validateForm();
   };
+
+  const handleTouch = ({ target }) => {
+    setFieldTouch({ ...fieldTouch, [target.name]: true });
+  };
+
+  useEffect(() => {
+    if (formData.fullName && formData.DOB) {
+      if ((formData.height && formData.height <= 0) || (formData.weight && formData.weight <= 0)) {
+        setIsValidated(false);
+      } else {
+        setIsValidated(true);
+      }
+    } else {
+      setIsValidated(false);
+    }
+  }, [formData, fieldTouch]);
+
   const handleClick = (evt) => {
-    validateForm();
     console.log(formData);
-    alert("data saved successfully")
+    alert("Patient's details have been saved successfully");
+    window.location.href="/";
     evt.preventDefault();
-    
   };
-  
-  const validateForm = () => {
-    const { fullName, address, DOB, gender, bloodGroup, height, weight } =
-      formData;
-      
-    setValidationMessages([]);
-    let messages = [];
-    if (!fullName) {
-      messages.push("Full Name is required");
-    }
-    if (!address) {
-      messages.push("Address is required");
-    }
-    if (!gender) {
-      messages.push("Please select a Gender");
-    }
-    if (!bloodGroup) {
-      messages.push("Please select a blood group");
-    }
-    if (!DOB) {
-      messages.push("Date of Birth is required");
-    }
-    setValidationMessages(messages);
-  };
-//   console.log(formData);
-//  alert ("details saved successfully!")
+
   return (
     <div className="row">
       <div className="col-6 offset-3">
@@ -53,43 +43,57 @@ function Forms(props) {
             <div className="card-body">
               <form>
                 <div className="form-group">
-                  <label className="fw-bold">Full Name</label>
+                  <label className="fw-bold">Name of Patient</label>
                   <input
                     className="form-control"
                     value={formData.fullName || ""}
                     onChange={handleChange}
+                    onBlur={handleTouch}
                     type="text"
                     name="fullName"
                     required
                   />
-                  {formData.fullName?'':<p className="alert alert-danger">Full Name is required</p>}
+                  {fieldTouch.fullName && !formData.fullName ? <p className="alert alert-danger">Full Name is required</p> : <></>}
                 </div>
-                <label className="fw-bold">Address</label>
-                <input
-                  className="form-control"
-                  value={formData.address || ""}
-                  onChange={handleChange}
-                  type="text"
-                  name="address" required
-                />
-                {/* <p className="alert alert-danger">{formData.address?'':'Address is required'}</p> */}
-
-                <p>{validationMessages.address && ''}</p>
                 <label className="fw-bold">Date of Birth</label>
                 <input
                   className="form-control"
                   value={formData.DOB || ""}
                   onChange={handleChange}
+                  onBlur={handleTouch}
                   type="date"
                   name="DOB"
                 />
-                {formData.DOB?'':<p className="alert alert-danger">Date of Birth is required</p>}
-
+                {fieldTouch.DOB && !formData.DOB ? <p className="alert alert-danger">DOB is required</p> : <></>}
+                <div>
+                  <label className="fw-bold">Gender</label>
+                  <select
+                    className="form-control"
+                    value={formData.gender || ""}
+                    onChange={handleChange}
+                    onBlur={handleTouch}
+                    name="gender"
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+                <label className="fw-bold">Place of Birth</label>
+                <input
+                  className="form-control"
+                  value={formData.address || ""}
+                  onChange={handleChange}
+                  onBlur={handleTouch}
+                  type="text"
+                  name="address" required
+                />
                 <label className="fw-bold">Blood Group</label>
                 <select
                   className="form-control"
                   value={formData.bloodGroup || ""}
                   onChange={handleChange}
+                  onBlur={handleTouch}
                   name="bloodGroup"
                 >
                   <option value="">Select Blood Group</option>
@@ -108,37 +112,29 @@ function Forms(props) {
                   className="form-control"
                   value={formData.height || ""}
                   onChange={handleChange}
-                  type="decimal"
+                  onBlur={handleTouch}
+                  type="number"
+                  min={0}
                   name="height"
                 />
+                {fieldTouch.height && formData.height && formData.height <= 0 ? <p className="alert alert-danger">Height should be positive</p> : <></>}
                 <label className="fw-bold">Weight</label>
                 <input
                   className="form-control"
                   value={formData.weight || ""}
                   onChange={handleChange}
-                  type="decimal"
+                  onBlur={handleTouch}
+                  type="number"
+                  min={0}
                   name="weight"
                 />
-                <label className="fw-bold">Gender</label>
-                <div>
-                <select
-                  className="form-control"
-                  value={formData.gender || ""}
-                  onChange={handleChange}
-                  name="gender"
-                >
-                  <option value="">Select Gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  </select>
-                </div>
-                  <br></br>
+                {fieldTouch.weight && formData.weight && formData.weight <= 0 ? <p className="alert alert-danger">Weight should be positive</p> : <></>}
+                <br></br>
                 <button
                   type="submit"
                   className="btn btn-outline-info"
                   onClick={handleClick}
-                    disabled={Object.keys(formData).length === 7 && validationMessages.length === 0 ? false : true}
-                        
+                  disabled={!isValidated}
                 >
                   Save
                 </button>
@@ -155,14 +151,6 @@ function Forms(props) {
                 </button>
               </form>
             </div>
-          </div>
-          <div style={{ color: "rebeccapurple" }}>
-            {validationMessages.length > 0 && <span>Validation Summary</span>}
-            <ul>
-              {validationMessages.map((vm) => (
-                <li key={vm}>{vm}</li>
-              ))}
-            </ul>
           </div>
         </div>
       </div>
