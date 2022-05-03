@@ -1,7 +1,7 @@
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Table = (props) => {
     const [gridOptions] = useState({
@@ -27,14 +27,20 @@ const Table = (props) => {
         paginationPageSize: 50,
         cacheBlockSize: 50
     });
-    const [rowData] = useState(props.rows);
+    const [rowData,setRowData] = useState(props.rows);
     const [columnDefs] = useState(props.columns);
+
+    useEffect(()=>{
+        setRowData(props.rows)
+    },[props.rows])
+
     return (
         <div className="ag-theme-alpine" style={{ height: 400, width: '100%' }}>
             <AgGridReact
-            gridOptions={gridOptions}
+                gridOptions={gridOptions}
                 rowData={rowData}
                 columnDefs={columnDefs}>
+                
             </AgGridReact>
         </div>
     )

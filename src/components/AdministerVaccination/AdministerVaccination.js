@@ -8,8 +8,10 @@ function AdministerVaccination() {
   const [formData, setFormData] = useState({});
   const [fieldTouch, setFieldTouch] = useState({});
   const [isValidated, setIsValidated] = useState(false);
-  const [patientList] = useState(useSelector(state => state.patient.patients));
-  const [vaccineList, setVacccineList] = useState(useSelector(state => state.vaccine.vaccines));
+  const patientListRedux = useSelector(state => state.patient.patients)
+  const [patientList,setPatientList] = useState([]);
+  const vaccineListRedux = useSelector(state => state.vaccine.vaccines);
+  const [vaccineList, setVacccineList] = useState([]);
   const [eligibleDoses, setEligibleDoses] = useState([]);
   const dispatch = useDispatch();
 
@@ -32,6 +34,14 @@ function AdministerVaccination() {
         evt.preventDefault();
       })
   };
+
+  useEffect(()=>{
+    setVacccineList(vaccineListRedux)
+  },[vaccineListRedux]);
+
+  useEffect(()=>{
+    setPatientList(patientListRedux)
+  },[patientListRedux]);
 
   useEffect(() => {
     if (formData.fullName) {
