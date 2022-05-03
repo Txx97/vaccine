@@ -1,7 +1,13 @@
 import React, { Fragment } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { fetchPatient } from "../../store/actions/Patient";
+import {fetchVaccine} from "../../store/actions/Vaccine";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  dispatch(fetchPatient());
+  dispatch(fetchVaccine());
   return (
     <Fragment>
     <header>

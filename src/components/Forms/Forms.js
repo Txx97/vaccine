@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addPatient } from "../../store/actions/Patient";
 
 function Forms(props) {
   const [formData, setFormData] = useState({});
   const [isValidated, setIsValidated] = useState(false);
   const [fieldTouch, setFieldTouch] = useState({});
+
+  const dispatch = useDispatch();
 
   const handleChange = ({ target }) => {
     setFormData({ ...formData, [target.name]: target.value });
@@ -26,10 +30,18 @@ function Forms(props) {
   }, [formData, fieldTouch]);
 
   const handleClick = (evt) => {
-    console.log(formData);
-    alert("Patient's details have been saved successfully");
-    window.location.href="/";
-    evt.preventDefault();
+    dispatch(addPatient(formData))
+      .then(() => {
+        alert("Patient's details have been saved successfully");
+        window.location.href="/";
+        evt.preventDefault();
+      })
+      .catch((err) => {
+        alert(err);
+        // window.location.href="/";
+        evt.preventDefault();
+      })
+
   };
 
   return (
@@ -50,8 +62,7 @@ function Forms(props) {
                     onChange={handleChange}
                     onBlur={handleTouch}
                     type="text"
-                    name="fullName"
-                    required
+                    name="fullName"                  
                   />
                   {fieldTouch.fullName && !formData.fullName ? <p className="alert alert-danger">Full Name is required</p> : <></>}
                 </div>
@@ -86,7 +97,7 @@ function Forms(props) {
                   onChange={handleChange}
                   onBlur={handleTouch}
                   type="text"
-                  name="address" required
+                  name="address"
                 />
                 <label className="fw-bold">Blood Group</label>
                 <select
@@ -131,7 +142,7 @@ function Forms(props) {
                 {fieldTouch.weight && formData.weight && formData.weight <= 0 ? <p className="alert alert-danger">Weight should be positive</p> : <></>}
                 <br></br>
                 <button
-                  type="submit"
+                  type="button"
                   className="btn btn-outline-info"
                   onClick={handleClick}
                   disabled={!isValidated}
